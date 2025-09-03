@@ -16,3 +16,6 @@
 ## Notificações
 `POST /api/notificacoes`
 - Cria nova regra de alerta.
+## API LINK
+- Segue o link da API para mais instruções detalhadas.
+[API Documentation](https://share.apidog.com/e86cc317-b31d-4f7a-b798-2341787555e4)
