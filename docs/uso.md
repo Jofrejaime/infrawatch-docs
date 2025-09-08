@@ -28,7 +28,7 @@ Bem-vindo à série de videoaulas do **InfraWatch**! Esses tutoriais foram criad
             controls 
             poster="images/video-thumbnail.jpg"
             preload="metadata">
-            <source src="/demo.mp4" type="video/mp4">
+            <source src="./demo.mp4" type="video/mp4">
             <p style="text-align: center; padding: 20px; color: #666;">🎬 Seu navegador não suporta reprodução de vídeos. <br><a href="/demo.mp4" download>Clique aqui para baixar o vídeo</a></p>
         </video>
     </div>
@@ -47,7 +47,7 @@ Bem-vindo à série de videoaulas do **InfraWatch**! Esses tutoriais foram criad
             controls 
             poster="images/video-thumbnail.jpg"
             preload="metadata">
-            <source src="/demo.mp4" type="video/mp4">
+            <source src="./demo.mp4" type="video/mp4">
             <p style="text-align: center; padding: 20px; color: #666;">🎬 Seu navegador não suporta reprodução de vídeos. <br><a href="/demo.mp4" download>Clique aqui para baixar o vídeo</a></p>
         </video>
     </div>
@@ -66,7 +66,7 @@ Bem-vindo à série de videoaulas do **InfraWatch**! Esses tutoriais foram criad
             controls 
             poster="images/video-thumbnail.jpg"
             preload="metadata">
-            <source src="/demo.mp4" type="video/mp4">
+            <source src="./demo.mp4" type="video/mp4">
             <p style="text-align: center; padding: 20px; color: #666;">🎬 Seu navegador não suporta reprodução de vídeos. <br><a href="/demo.mp4" download>Clique aqui para baixar o vídeo</a></p>
         </video>
     </div>
@@ -85,7 +85,7 @@ Bem-vindo à série de videoaulas do **InfraWatch**! Esses tutoriais foram criad
             controls 
             poster="images/video-thumbnail.jpg"
             preload="metadata">
-            <source src="/demo.mp4" type="video/mp4">
+            <source src="./demo.mp4" type="video/mp4">
             <p style="text-align: center; padding: 20px; color: #666;">🎬 Seu navegador não suporta reprodução de vídeos. <br><a href="/demo.mp4" download>Clique aqui para baixar o vídeo</a></p>
         </video>
     </div>
@@ -104,7 +104,7 @@ Bem-vindo à série de videoaulas do **InfraWatch**! Esses tutoriais foram criad
             controls 
             poster="images/video-thumbnail.jpg"
             preload="metadata">
-            <source src="/demo.mp4" type="video/mp4">
+            <source src="./demo.mp4" type="video/mp4">
             <p style="text-align: center; padding: 20px; color: #666;">🎬 Seu navegador não suporta reprodução de vídeos. <br><a href="/demo.mp4" download>Clique aqui para baixar o vídeo</a></p>
         </video>
     </div>
@@ -123,7 +123,7 @@ Bem-vindo à série de videoaulas do **InfraWatch**! Esses tutoriais foram criad
             controls 
             poster="images/video-thumbnail.jpg"
             preload="metadata">
-            <source src="/demo.mp4" type="video/mp4">
+            <source src="./demo.mp4" type="video/mp4">
             <p style="text-align: center; padding: 20px; color: #666;">🎬 Seu navegador não suporta reprodução de vídeos. <br><a href="/demo.mp4" download>Clique aqui para baixar o vídeo</a></p>
         </video>
     </div>
@@ -142,7 +142,7 @@ Bem-vindo à série de videoaulas do **InfraWatch**! Esses tutoriais foram criad
             controls 
             poster="images/video-thumbnail.jpg"
             preload="metadata">
-            <source src="/demo.mp4" type="video/mp4">
+            <source src="./demo.mp4" type="video/mp4">
             <p style="text-align: center; padding: 20px; color: #666;">🎬 Seu navegador não suporta reprodução de vídeos. <br><a href="/demo.mp4" download>Clique aqui para baixar o vídeo</a></p>
         </video>
     </div>
@@ -163,7 +163,7 @@ Os vídeos estarão disponíveis em nossa plataforma de suporte e no canal ofici
             controls 
             poster="images/video-thumbnail.jpg"
             preload="metadata">
-            <source src="/demo.mp4" type="video/mp4">
+            <source src="./demo.mp4" type="video/mp4">
             <p style="text-align: center; padding: 20px; color: #666;">🎬 Seu navegador não suporta reprodução de vídeos. <br><a href="/demo.mp4" download>Clique aqui para baixar o vídeo</a></p>
         </video>
     </div>
