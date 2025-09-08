@@ -342,159 +342,48 @@ graph LR
 
 ### Arquitetura dos Agentes
 
-```python
-# Estrutura do agente Python
-class MonitoringAgent:
-    def __init__(self, config):
-        self.config = config
-        self.api_client = APIClient(config.api_url)
-        self.collectors = self._init_collectors()
-    
-    def _init_collectors(self):
-        return {
-            'system': SystemCollector(),
-            'network': NetworkCollector(),
-            'application': ApplicationCollector()
-        }
-    
-    async def run_monitoring_cycle(self):
-        for collector_name, collector in self.collectors.items():
-            try:
-                metrics = await collector.collect()
-                await self.api_client.send_metrics(metrics)
-            except Exception as e:
-                logger.error(f"Error in {collector_name}: {e}")
-```
-
-### Tipos de Coletores
-
-=== "System Collector"
-    ```python
-    class SystemCollector:
-        def collect(self):
-            return {
-                'cpu_usage': psutil.cpu_percent(),
-                'memory_usage': psutil.virtual_memory().percent,
-                'disk_usage': psutil.disk_usage('/').percent,
-                'load_average': os.getloadavg()
-            }
-    ```
-
-=== "Network Collector"
-    ```python
-    class NetworkCollector:
-        def collect(self):
-            stats = psutil.net_io_counters()
-            return {
-                'bytes_sent': stats.bytes_sent,
-                'bytes_recv': stats.bytes_recv,
-                'packets_sent': stats.packets_sent,
-                'packets_recv': stats.packets_recv
-            }
-    ```
-
-=== "Application Collector"
-    ```python
-    class ApplicationCollector:
-        def collect(self):
-            processes = []
-            for proc in psutil.process_iter(['pid', 'name', 'cpu_percent']):
-                if proc.info['name'] in self.monitored_processes:
-                    processes.append(proc.info)
-            return {'processes': processes}
-    ```
-
-## Escalabilidade e Performance
-
-### Estratégias de Escalabilidade
-
-#### Horizontal Scaling
-
-```yaml
-# Kubernetes deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: infrawatch-backend
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: infrawatch-backend
-  template:
-    spec:
-      containers:
-      - name: backend
-        image: infrawatch/backend:latest
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
-```
-
-#### Load Balancing
-
-```nginx
-upstream infrawatch_backend {
-    least_conn;
-    server backend1:3001 weight=1 max_fails=3 fail_timeout=30s;
-    server backend2:3001 weight=1 max_fails=3 fail_timeout=30s;
-    server backend3:3001 weight=1 max_fails=3 fail_timeout=30s;
-}
-
-server {
-    location /api {
-        proxy_pass http://infrawatch_backend;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-```
-
-### Otimizações de Performance
-
-#### Database Indexing
-
-```sql
--- Índices para queries frequentes
-CREATE INDEX idx_metrics_service_time ON metrics(service_id, time DESC);
-CREATE INDEX idx_services_status ON services(status);
-CREATE INDEX idx_alerts_created_at ON alerts(created_at DESC);
-
--- Particionamento por tempo
-SELECT add_dimension('metrics', 'service_id', number_partitions => 4);
-```
-
-#### Caching Strategy
-
 ```javascript
-// Cache em múltiplas camadas
-class CacheManager {
-  constructor() {
-    this.l1Cache = new Map(); // Memory cache
-    this.l2Cache = redis;     // Redis cache
-  }
-  
-  async get(key) {
-    // L1 Cache
-    if (this.l1Cache.has(key)) {
-      return this.l1Cache.get(key);
-    }
-    
-    // L2 Cache
-    const value = await this.l2Cache.get(key);
-    if (value) {
-      this.l1Cache.set(key, value);
-      return value;
-    }
-    
-    return null;
-  }
-}
+    const program = new Command();
+    program
+      .name("infra-watch")
+      .description("Agente de monitoramento")
+      .version("1.0.0");
+    program
+      .command("auth")
+      .description("Gerencia autenticação")
+      .addCommand(
+        new Command("login")
+          .description("Faz login no servidor")
+          .action(async () => {
+            await login();
+          })
+      )
+      .addCommand(
+        new Command("logout")
+          .description("Faz logout no servidor")
+          .action(async () => {
+            await logout();
+          })
+      );
+    const server = new Command("server").description("Gerencia o servidor");
+    server
+      .command("get")
+      .description("Obtém o ID do servidor")
+      .action(async () => {
+        const serverId = await getServerId(true);
+        console.log(serverId);
+        exit(0);
+      });
+    server
+      .command("start")
+      .description("Inicia o servidor")
+      .action(async () => {
+        await startServer();
+      });
+    program.addCommand(server);
+    program.parseAsync(process.argv);
 ```
+
 
 ## Segurança
 
@@ -527,88 +416,6 @@ const authorize = (roles) => {
     next();
   };
 };
-```
-
-### Comunicação Segura
-
-```javascript
-// HTTPS Configuration
-const https = require('https');
-const fs = require('fs');
-
-const options = {
-  key: fs.readFileSync('private-key.pem'),
-  cert: fs.readFileSync('certificate.pem')
-};
-
-https.createServer(options, app).listen(443);
-
-// API Rate Limiting
-const rateLimit = require('express-rate-limit');
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP'
-});
-```
-
-## Monitoramento do Sistema
-
-### Health Checks
-
-```javascript
-// Sistema de health checks
-app.get('/health', async (req, res) => {
-  const health = {
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    services: {
-      database: await checkDatabase(),
-      redis: await checkRedis(),
-      external_apis: await checkExternalAPIs()
-    }
-  };
-  
-  const isHealthy = Object.values(health.services)
-    .every(service => service.status === 'ok');
-  
-  res.status(isHealthy ? 200 : 503).json(health);
-});
-```
-
-### Métricas Internas
-
-```javascript
-// Prometheus metrics
-const prometheus = require('prom-client');
-
-const httpRequestDuration = new prometheus.Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'Duration of HTTP requests in seconds',
-  labelNames: ['method', 'route', 'status']
-});
-
-const activeConnections = new prometheus.Gauge({
-  name: 'websocket_connections_active',
-  help: 'Number of active WebSocket connections'
-});
-```
-
----
-
-Esta arquitetura garante que o InfraWatch seja escalável, seguro e performático, capaz de monitorar infraestruturas de qualquer tamanho com alta disponibilidade e confiabilidade.
-
-const httpRequestDuration = new prometheus.Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'Duration of HTTP requests in seconds',
-  labelNames: ['method', 'route', 'status']
-});
-
-const activeConnections = new prometheus.Gauge({
-  name: 'websocket_connections_active',
-  help: 'Number of active WebSocket connections'
-});
 ```
 
 ---
