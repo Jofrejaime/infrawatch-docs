@@ -108,7 +108,7 @@ graph TB
 
   - 1. Consulte o [Guia de Instalação e configuração do agente](instalacao.md) para configuração inicial.
     1. Explore a [Arquitetura do Sistema](arquitetura.md).
-    2. Acesse o [Manual de Uso](video.md) para dominar a plataforma.
+    2. Acesse o [Manual de Uso](uso.md) para dominar a plataforma.
     3. Conheça a [Documentação da API](https://share.apidog.com/e86cc317-b31d-4f7a-b798-2341787555e4) para integrações.
 
 ## Suporte
