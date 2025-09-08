@@ -122,9 +122,4 @@ nav:
   - Arquitetura: arquitetura.md
   - Manual de Uso: uso.md
   - Referência da API: api.md
-  - Agentes: agentes.md
-  - Desenvolvimento:
-    - Contribuição: contribuicao.md
-    - Roadmap: roadmap.md
-  - Videos: video.md
   - Suporte: faq.md
