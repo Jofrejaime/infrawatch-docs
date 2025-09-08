@@ -1,6 +1,6 @@
 # Videoaulas do InfraWatch
 
-![InfraWatch Logo](images/favicon.ico)# Videoaulas do InfraWatch
+![InfraWatch Logo](images/favicon.ico)
 
 *Aprenda a dominar a plataforma de monitoramento de infraestrutura*
 
