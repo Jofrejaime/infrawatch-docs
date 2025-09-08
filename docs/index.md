@@ -1,44 +1,45 @@
 # InfraWatch
 
 <div align="center">
-  <img src="images/favicon.ico" alt="InfraWatch Logo" width="80" height="80">
-  <h2>Plataforma de Monitoramento de Infraestrutura Corporativa</h2>
-  <p><em>Visibilidade completa, controle total da sua infraestrutura tecnológica</em></p>
+  <img src="images/favicon.ico" alt="InfraWatch Logo" width="100" height="100">
+  <h1 style="font-size: 2.5em; color: #1a3c5e; font-family: 'Arial', sans-serif;">InfraWatch</h1>
+  <p style="font-size: 1.2em; color: #4a4a4a; font-style: italic; font-family: 'Georgia', serif;">Plataforma de Monitoramento de Infraestrutura Corporativa</p>
+  <p style="font-size: 1em; color: #666; font-family: 'Arial', sans-serif;">Visibilidade total, controle absoluto da sua infraestrutura tecnológica</p>
 </div>
 
 ---
 
 ## Visão Geral
 
-O **InfraWatch** é uma solução moderna de monitoramento de infraestruturas corporativas que centraliza a observação de múltiplos serviços e sistemas organizacionais. Oferece visibilidade em tempo real sobre redes, servidores, aplicações e endpoints, garantindo alta disponibilidade dos serviços críticos.
+O **InfraWatch** é uma solução avançada e intuitiva para monitoramento de infraestruturas corporativas, projetada para centralizar a gestão de redes, servidores, aplicações e endpoints. Com foco em tempo real, garante alta disponibilidade e confiabilidade para serviços críticos, oferecendo uma interface moderna e insights acionáveis.
 
 !!! success "Objetivo Principal"
-    Criar uma plataforma unificada que permite às organizações monitorar proativamente sua infraestrutura tecnológica, antecipando falhas e otimizando tempos de resposta.
+    Proporcionar uma plataforma unificada que capacita organizações a monitorar proativamente sua infraestrutura, prevenir falhas e otimizar respostas com base em dados em tempo real.
 
 ## Funcionalidades Principais
 
 ### Monitoramento Multifonte
-- **Conectividade diversificada**: API, SNMP, ping, webhook
-- **Detecção automática** de mudanças de estado (up/down)
-- **Coleta em tempo real** com intervalos personalizáveis
+- **Conectividade Avançada**: Suporte a API, SNMP, ping e webhooks.
+- **Detecção Automática**: Monitora mudanças de estado (up/down) em tempo real.
+- **Coleta Flexível**: Intervalos de coleta personalizáveis para máxima eficiência.
 
 ### Dashboards Inteligentes
-- Interface responsiva e intuitiva
-- Indicadores visuais em tempo real
-- Métricas de uptime e disponibilidade
-- Relatórios de SLA automatizados
+- Interface moderna, responsiva e altamente visual.
+- Indicadores dinâmicos com métricas em tempo real.
+- Relatórios de SLA automatizados e detalhados.
+- Visualizações interativas de uptime e performance.
 
 ### Sistema de Alertas
-- Notificações multicanal (e-mail, SMS, push)
-- Níveis de criticidade personalizáveis
-- Regras de escalonamento inteligentes
-- Integração com Slack, Teams, WhatsApp
+- Notificações multicanal: e-mail, SMS, push e mais.
+- Configuração de níveis de criticidade e regras de escalonamento.
+- Integração com plataformas como Slack, Microsoft Teams e WhatsApp.
+- Alertas baseados em inteligência preditiva.
 
 ### Análise Histórica
-- Armazenamento de logs e métricas
-- Relatórios de tendências
-- Análise de incidentes
-- Projeções baseadas em dados
+- Armazenamento seguro de logs e métricas.
+- Relatórios de tendências com gráficos interativos.
+- Análise detalhada de incidentes passados.
+- Projeções preditivas para planejamento estratégico.
 
 ## Arquitetura do Sistema
 
@@ -47,7 +48,7 @@ graph TB
     A[Frontend React] --> B[API Gateway]
     B --> C[Backend Services]
     C --> D[Database PostgreSQL]
-    C --> E[Time Series DB]
+    C --> E[Time Series DB InfluxDB]
     C --> F[Notification Service]
     
     G[Agents] --> H[Monitoring Engine]
@@ -57,77 +58,69 @@ graph TB
     J --> C
     
     F --> K[Email/SMS/Push]
-    F --> L[Slack/Teams]
 ```
 
 ## Casos de Uso
 
 === "Detecção de Falha Crítica"
     
-    **Cenário**: Servidor ERP-PROD indisponível
+    **Cenário**: Indisponibilidade do servidor ERP-PROD
     
-    1. Sistema detecta automaticamente
-    2. Dashboard exibe alerta vermelho
-    3. Notificação enviada ao responsável
-    4. Log detalhado registrado
+    1. Detecção automática com alertas instantâneos.
+    2. Dashboard exibe alerta visual em vermelho.
+    3. Notificação enviada ao time de TI via canal prioritário.
+    4. Logs detalhados para análise pós-incidente.
 
-=== "Monitoramento de SLA"
+=== "Monitoramento"
     
-    **Cenário**: Acompanhamento de Kiosks Self-Service
+    **Cenário**: Gestão de Kiosks Self-Service
     
-    - Tracking de uptime (99.3% atual)
-    - Registro de 3 falhas no período
-    - Relatório de impacto no SLA
-    - Projeções baseadas em histórico
+    - Acompanhamento de uptime.
+    - Registro detalhado de falhas no período.
+    - Relatórios de impacto com gráficos.
+    - Projeções baseadas em dados históricos.
 
 ## Benefícios Organizacionais
 
 ### Operacionais
-- **Proatividade**: Detecção precoce de problemas
-- **Eficiência**: Redução do tempo de resolução
-- **Centralização**: Visão unificada da infraestrutura
-- **Automatização**: Menos verificações manuais
+- **Proatividade**: Identificação precoce de problemas.
+- **Eficiência**: Redução significativa no tempo de resolução.
+- **Centralização**: Visão unificada de toda a infraestrutura.
+- **Automatização**: Minimização de processos manuais.
 
 ### Estratégicos
-- **Compliance**: Monitoramento automático de SLA
-- **Planejamento**: Decisões baseadas em dados
-- **Otimização**: Identificação de melhorias
-- **Transparência**: Visibilidade para gestão
+- **Conformidade**: Monitoramento automatizado.
+- **Planejamento**: Tomada de decisão baseada em dados.
+- **Otimização**: Identificação de gargalos e melhorias.
 
 ## Integrações Suportadas
 
-| Protocolo | Descrição | Uso |
-|-----------|-----------|-----|
-| **REST/GraphQL** | APIs modernas | Serviços web |
-| **SNMP** | Protocolo de rede | Equipamentos tradicionais |
-| **ICMP Ping** | Conectividade básica | Verificação de rede |
-| **Webhooks** | Integração bidirecional | Sistemas externos |
-
-### Ferramentas de Gestão
-- **GLPI**: Gestão de ativos
-- **DocuWare**: Gestão documental
-- **Sistemas ERP**: Processos de negócio
-- **Plataformas de Chat**: Slack, Teams
+| Protocolo           | Descrição                     | Uso                        |
+|--------------------|-------------------------------|----------------------------|
+| **REST/GraphQL**   | APIs modernas                | Integração com serviços web |
+| **SNMP**           | Protocolo de rede            | Equipamentos legados       |
+| **ICMP Ping**      | Verificação de conectividade | Testes de rede básicos     |
+| **Webhooks**       | Integração bidirecional      | Conexão com sistemas externos |
 
 ## Começar Agora
 
-!!! tip "Próximos Passos"
-    1. Leia o [Guia de Instalação](instalacao.md)
-    2. Entenda a [Arquitetura](arquitetura.md)
-    3. Consulte o [Manual de Uso](uso.md)
-    4. Explore a [API](api.md)
+### Próximos Passos
+
+  - 1. Consulte o [Guia de Instalação e configuração do agente](instalacao.md) para configuração inicial.
+    1. Explore a [Arquitetura do Sistema](arquitetura.md).
+    2. Acesse o [Manual de Uso](video.md) para dominar a plataforma.
+    3. Conheça a [Documentação da API](https://share.apidog.com/e86cc317-b31d-4f7a-b798-2341787555e4) para integrações.
 
 ## Suporte
 
-Precisa de ajuda? Consulte nossa seção de [Suporte](faq.md) ou entre em contato:
+Precisa de ajuda? Nossa equipe está pronta para ajudar:
 
-- **Email**: suporte@rcs-angola.com
-- **Chat**: Disponível no dashboard
-- **WhatsApp**: +244 XXX XXX XXX
+- **Email**: [rcsangola42@gmail.com](mailto:rcsangola42@gmail.com)
+- **WhatsApp**: Entre em contato via [+244946671828](tel:+244946671828).
 
 ---
 
 <div align="center">
-  <p><strong>InfraWatch</strong> - Desenvolvido pela RCS Angola</p>
-  <p><em>Transformando a gestão de infraestrutura através da inovação</em></p>
+  <p style="font-size: 1.1em; color: #3381cfff; font-weight: bold; font-family: 'Arial', sans-serif;">InfraWatch - Desenvolvido pela RCS Angola</p>
+  <p style="font-size: 0.9em; font-style: italic; font-family: 'Georgia', serif;">Inovação que transforma a gestão de infraestrutura</p>
 </div>
