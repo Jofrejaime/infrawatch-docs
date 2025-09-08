@@ -105,16 +105,17 @@ O backend é construído com Node.js e Express, fornecendo APIs RESTful e WebSoc
 ```
 api/
 ├── src/
-│   ├── controllers/       # Controladores da API
-│   ├── services/          # Lógica de negócio
-│   ├── models/            # Modelos de dados
-│   ├── middleware/        # Middlewares
-│   ├── routes/            # Definição de rotas
-│   └── utils/             # Utilitários
-├── config/
-│   ├── database.js        # Configuração do BD
-│   └── monitoring.js      # Config. monitoramento
-└── tests/                 # Testes automatizados
+│   ├── controller/       # Controladores da API
+│   ├── dto/              # Design e Tranferencia de dados
+│   ├── generated/        # Gerados automaticamente
+│   ├── helper/           
+│   ├── jobs/            
+│   ├── middleware/      # Middlewares
+|   ├── types/
+│   ├── routers/         # Definição de rotas
+│   └── lib/             # Biblioteca
+├── custom.d.ts
+└── index.ts
 ```
 
 #### Serviços Principais
@@ -125,6 +126,28 @@ api/
       constructor() {
         this.activeChecks = new Map();
         this.scheduler = new CronScheduler();
+        this.notificationSended = new Set();
+      }
+      
+      async checkEndpointDowntime(endpoint, lastStatus, time, io, prisma) {
+        const diffMs = new Date().getTime() - lastStatus.created_at.getTime();
+        const diffMin = diffMs / 1000 / 60;
+        if (diffMin >= time && !notificationSended.has(endpoint.id)) {
+            console.log(`:atenção: O endpoint ${endpoint.identifier} está down há ${Math.floor(diffMin)} minutos!`);
+            await prisma.notification.create({
+                data: {
+                    workspaceId: endpoint.workspaceId,
+                    title: `Alerta no endpoint ${endpoint.identifier}`,
+                    content: `:atenção: O endpoint ${endpoint.identifier} está down há ${Math.floor(diffMin)} minutos!`,
+                },
+            });
+            io.emit("notification", {
+                workspaceId: endpoint.workspaceId,
+                title: `Alerta no endpoint ${endpoint.identifier}`,
+                content: `:atenção: O endpoint ${endpoint.identifier} está down há ${Math.floor(diffMin)} minutos!`,
+            });
+            notificationSended.add(endpoint.id);
+        }
       }
       
       async startMonitoring(service) {
@@ -141,42 +164,31 @@ api/
       }
     }
     ```
-
 === "Alert Manager"
     ```javascript
-    class AlertManager {
-      constructor() {
-        this.rules = new RuleEngine();
-        this.notifier = new NotificationService();
-      }
-      
-      async processAlert(metric) {
-        const alerts = await this.rules.evaluate(metric);
-        
-        for (const alert of alerts) {
-          await this.notifier.send(alert);
-          await this.logAlert(alert);
-        }
-      }
-    }
+    await prisma.notification.create({
+      data: {
+          workspaceId: endpoint.workspaceId,
+          title: `Alerta no endpoint ${endpoint.identifier}`,
+          content: `:atenção: O endpoint ${endpoint.identifier} está down há ${Math.floor(diffMin)} minutos!`,
+          },});
+    io.emit("notification", {
+      workspaceId: endpoint.workspaceId,
+        title: `Alerta no endpoint ${endpoint.identifier}`,
+          content: `:atenção: O endpoint ${endpoint.identifier} está down há ${Math.floor(diffMin)} minutos!`,
+    });
+    notificationSended.add(endpoint.id);
     ```
-
-=== "Data Collector"
+=== "Get Notification"
     ```javascript
-    class DataCollector {
-      async collect(source, config) {
-        switch (source.type) {
-          case 'http':
-            return await this.httpCheck(config);
-          case 'snmp':
-            return await this.snmpCheck(config);
-          case 'tcp':
-            return await this.tcpCheck(config);
-          default:
-            throw new Error(`Unsupported source: ${source.type}`);
-        }
-      }
-    }
+    const notifications = await prisma.notification.findMany({
+            where: {
+                workspaceId: workspaceId,
+            },
+            orderBy: { created_at: "desc" },
+            skip: offset,
+            take: limit,
+        });
     ```
 
 ### Banco de Dados
@@ -186,32 +198,60 @@ api/
 Armazena dados estruturados e configurações:
 
 ```sql
--- Estrutura principal das tabelas
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(50) DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT NOW()
-);
+-- Tabela de usuários
+create table public.users (
+  id uuid not null default gen_random_uuid (),
+  created_at timestamp with time zone null default now(),
+  name text null,
+  username text null,
+  email text null,
+  password text null,
+  role public.role null default 'VIEWER'::role,
+  is_active boolean null default false,
+  reset_token text null,
+  date_expiration timestamp with time zone null,
+  constraint users_pkey primary key (id)
+) TABLESPACE pg_default;
 
-CREATE TABLE services (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    type VARCHAR(50) NOT NULL,
-    config JSONB NOT NULL,
-    status VARCHAR(20) DEFAULT 'unknown',
-    last_check TIMESTAMP,
-    created_at TIMESTAMP DEFAULT NOW()
-);
+-- Tabela de workspace
+create table public.workspace (
+  id uuid not null default gen_random_uuid (),
+  created_at timestamp with time zone not null default now(),
+  workspace_name text null,
+  about text null,
+  "userId" uuid null default gen_random_uuid (),
+  constraint workspace_pkey primary key (id)
+) TABLESPACE pg_default;
 
-CREATE TABLE alert_rules (
-    id SERIAL PRIMARY KEY,
-    service_id INTEGER REFERENCES services(id),
-    condition JSONB NOT NULL,
-    severity VARCHAR(20) NOT NULL,
-    enabled BOOLEAN DEFAULT true
-);
+-- Tabela de servidores
+create table public.server (
+  id uuid not null default gen_random_uuid (),
+  created_at timestamp with time zone not null default now(),
+  servername text not null,
+  server_idenfier text not null,
+  toggle boolean null default true,
+  "workspaceId" uuid null,
+  time_ms integer null default 60000,
+  is_busy boolean null default false,
+  "userId" uuid null default gen_random_uuid (),
+  "updaterId" uuid null default gen_random_uuid (),
+  constraint server_pkey primary key (id),
+  constraint server_updaterId_fkey foreign KEY ("updaterId") references users (id),
+  constraint server_userId_fkey foreign KEY ("userId") references users (id),
+  constraint server_workspaceId_fkey foreign KEY ("workspaceId") references workspace (id)
+) TABLESPACE pg_default;
+
+-- Tabela de notificações
+create table public.notification (
+  id uuid not null default gen_random_uuid (),
+  created_at timestamp with time zone not null default now(),
+  "userId" uuid null default gen_random_uuid (),
+  title character varying not null,
+  content text not null,
+  "workspaceId" uuid null default gen_random_uuid (),
+  constraint notification_pkey primary key (id),
+  constraint notification_workspaceId_fkey foreign KEY ("workspaceId") references workspace (id)
+) TABLESPACE pg_default;
 ```
 
 #### Time Series Database (InfluxDB/TimescaleDB)
@@ -542,6 +582,22 @@ app.get('/health', async (req, res) => {
 ```javascript
 // Prometheus metrics
 const prometheus = require('prom-client');
+
+const httpRequestDuration = new prometheus.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status']
+});
+
+const activeConnections = new prometheus.Gauge({
+  name: 'websocket_connections_active',
+  help: 'Number of active WebSocket connections'
+});
+```
+
+---
+
+Esta arquitetura garante que o InfraWatch seja escalável, seguro e performático, capaz de monitorar infraestruturas de qualquer tamanho com alta disponibilidade e confiabilidade.
 
 const httpRequestDuration = new prometheus.Histogram({
   name: 'http_request_duration_seconds',
